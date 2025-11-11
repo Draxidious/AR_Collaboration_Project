@@ -377,6 +377,7 @@ GameObject:
   - component: {fileID: 1368112279}
   - component: {fileID: 1368112278}
   - component: {fileID: 1368112277}
+  - component: {fileID: 1368112283}
   m_Layer: 0
   m_Name: ARCamera
   m_TagString: MainCamera
@@ -528,6 +529,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1368112283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368112276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8e7707e90d38145ae663989bc872d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  arCamera: {fileID: 1368112281}
+  pinPrefab: {fileID: 2919387385965468922, guid: 645a2d616953b0c4b98159c98e97484e, type: 3}
+  mapTarget: {fileID: 1879740330}
 --- !u!1 &1879740327
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +555,7 @@ GameObject:
   - component: {fileID: 1879740331}
   - component: {fileID: 1879740330}
   - component: {fileID: 1879740329}
+  - component: {fileID: 1879740333}
   - component: {fileID: 1879740332}
   m_Layer: 0
   m_Name: ImageTarget
@@ -617,7 +634,7 @@ MonoBehaviour:
   mMotionHint: 1
   mTrackingOptimization: 0
   mTrackingOptimizationNeedsUpgrade: 0
-  mPreview: {fileID: 1879740332}
+  mPreview: {fileID: 1879740333}
 --- !u!4 &1879740331
 Transform:
   m_ObjectHideFlags: 0
@@ -627,14 +644,35 @@ Transform:
   m_GameObject: {fileID: 1879740327}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.004, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 888717480}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1879740332
+--- !u!65 &1879740332
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879740327}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.42502245, y: 0.011917697, z: 0.45733494}
+  m_Center: {x: 0.0895098, y: 0, z: -0.10161266}
+--- !u!114 &1879740333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
