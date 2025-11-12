@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem; // NEW INPUT SYSTEM
 using Vuforia;
 
@@ -8,6 +9,7 @@ public class MapPinPlacer : MonoBehaviour
     public Camera arCamera;
     public GameObject pinPrefab;
     public ImageTargetBehaviour mapTarget;
+    public GameObject parent;
 
     void Update()
     {
@@ -19,6 +21,8 @@ public class MapPinPlacer : MonoBehaviour
         // If the user tapped/clicked this frame:
         if (WasScreenTapped())
         {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;
             print("Screen tapped - placing pin");
             RaycastFromScreen(Pointer.current.position.ReadValue());
         }
@@ -52,7 +56,7 @@ public class MapPinPlacer : MonoBehaviour
             GameObject pin = Instantiate(pinPrefab, hit.point, Quaternion.identity);
 
             // Parent to map so pin stays attached to the moving tracked target
-            pin.transform.SetParent(mapTarget.transform, true);
+            pin.transform.SetParent(parent.transform, true);
 
             // Optional: make pin stand upright according to surface
             pin.transform.up = hit.normal;
