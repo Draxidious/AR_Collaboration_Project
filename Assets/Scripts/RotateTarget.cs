@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem; // NEW INPUT SYSTEM
+using Photon.Pun;           
 
 // Class for providing multiple perspectives of known targets.
 public class RotateTarget : MonoBehaviour
@@ -10,10 +11,25 @@ public class RotateTarget : MonoBehaviour
     private Camera m_ARCamera;
     public Camera ARCamera { get { return m_ARCamera; } set { m_ARCamera = value; } }
 
+    // Photon
+    private PhotonView photonView; 
+
     // Private variables for handling the rotations.
     private bool m_Rotating;
     private Vector2 m_RotatingFromScreenPos;
     private Quaternion m_InitialRotation;
+
+    void Awake()
+    {
+        if (m_ARCamera == null)
+            m_ARCamera = Camera.main;
+
+        photonView = GetComponent<PhotonView>();
+        if (photonView == null)
+        {
+            Debug.LogError("[" + gameObject.name + "][RotateTarget]: No PhotonView on this object! Add one to sync rotation.");
+        }
+    }
 
     void Reset()
     {
@@ -27,6 +43,10 @@ public class RotateTarget : MonoBehaviour
 
     void Update()
     {
+        // ❗ Only the current owner should drive rotation
+        if (photonView != null && !photonView.IsMine)
+            return;
+
         if (m_ARCamera == null)
         {
             m_ARCamera = Camera.main;
@@ -60,6 +80,10 @@ public class RotateTarget : MonoBehaviour
             {
                 if (hit.transform == transform)
                 {
+                    // 👇 NEW: grab ownership when this user starts rotating
+                    if (photonView != null)
+                        photonView.RequestOwnership();
+
                     m_Rotating = true;
                     m_RotatingFromScreenPos = screenPos;
                     m_InitialRotation = transform.rotation;
@@ -77,14 +101,9 @@ public class RotateTarget : MonoBehaviour
         else if (m_Rotating && pointer.press.isPressed)
         {
             Vector2 currentPos = pointer.position.ReadValue();
-            Vector2 delta = currentPos - m_RotatingFromScreenPos;
 
             // Reset to initial rotation each frame, then reapply based on delta
             transform.rotation = m_InitialRotation;
-
-            // Match the old script's behavior (note the signs)
-            float deltaX = currentPos.x - m_RotatingFromScreenPos.x;
-            float deltaY = currentPos.y - m_RotatingFromScreenPos.y;
 
             float yawDeg = (m_RotatingFromScreenPos.x - currentPos.x) / m_ARCamera.scaledPixelWidth * 360.0f;   // horizontal
             float pitchDeg = -(m_RotatingFromScreenPos.y - currentPos.y) / m_ARCamera.scaledPixelHeight * 360.0f; // vertical

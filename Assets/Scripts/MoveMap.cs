@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem; // NEW INPUT SYSTEM
+using Photon.Pun;             
 
 public class MoveMap : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class MoveMap : MonoBehaviour
     [Tooltip("How fast the map moves towards/away from the camera during pinch.")]
     public float zoomSpeed = 0.01f;
 
+    // Photon
+    private PhotonView photonView;   
+
     // Internal state
     private bool isDragging = false;
     private Vector2 dragStartScreenPos;
@@ -25,6 +29,18 @@ public class MoveMap : MonoBehaviour
     private bool isPinching = false;
     private float initialPinchDistance;
     private Vector3 initialMapPosition;
+
+    private void Awake()
+    {
+        if (arCamera == null)
+            arCamera = Camera.main;
+
+        photonView = GetComponent<PhotonView>();
+        if (photonView == null)
+        {
+            Debug.LogError("[" + gameObject.name + "][MoveMap]: No PhotonView on this object! Add one to sync movement.");
+        }
+    }
 
     private void Reset()
     {
@@ -37,6 +53,10 @@ public class MoveMap : MonoBehaviour
 
     private void Update()
     {
+        // Only the current owner should drive movement
+        if (photonView != null && !photonView.IsMine)
+            return;
+
         if (arCamera == null)
         {
             Debug.LogError("[" + gameObject.name + "][MoveMap]: Missing AR camera reference.");
@@ -68,6 +88,10 @@ public class MoveMap : MonoBehaviour
             {
                 if (hit.transform == transform)
                 {
+                    //grab ownership when starting drag
+                    if (photonView != null)
+                        photonView.RequestOwnership();
+
                     isDragging = true;
                     dragStartScreenPos = pointer.position.ReadValue();
                     dragStartWorldPos = transform.position;
@@ -125,6 +149,10 @@ public class MoveMap : MonoBehaviour
 
         if (!isPinching)
         {
+            // also grab ownership when starting a pinch
+            if (photonView != null)
+                photonView.RequestOwnership();
+
             isPinching = true;
             initialPinchDistance = currentDistance;
             initialMapPosition = transform.position;

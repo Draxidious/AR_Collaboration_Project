@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10eca6ee285fdd843931c14d15a64e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  mapPinPlacer: {fileID: 1368112283}
+  mapPinPlacer: {fileID: 7296032605929155625}
   rotateTarget: {fileID: 888717482}
   moveMap: {fileID: 888717484}
 --- !u!4 &603650168
@@ -913,6 +913,7 @@ GameObject:
   - component: {fileID: 1198849324}
   - component: {fileID: 1198849323}
   - component: {fileID: 1198849325}
+  - component: {fileID: 1198849326}
   m_Layer: 0
   m_Name: Photon
   m_TagString: Untagged
@@ -927,7 +928,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1198849322}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c1b84a427010e0469ce0df07ab64dbc, type: 3}
   m_Name: 
@@ -972,6 +973,20 @@ MonoBehaviour:
   PrefabsToInstantiate:
   - {fileID: 2010793435435179958, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
   AutoSpawnObjects: 1
+--- !u!114 &1198849326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198849322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c38760ea54b618b4da8d1cacf0aa3ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhotonConnector
+  gameVersion: 1.0
+  roomName: AR_Map_Room
 --- !u!1 &1302620034
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,7 +1212,6 @@ GameObject:
   - component: {fileID: 1368112279}
   - component: {fileID: 1368112278}
   - component: {fileID: 1368112277}
-  - component: {fileID: 1368112283}
   m_Layer: 0
   m_Name: ARCamera
   m_TagString: MainCamera
@@ -1349,22 +1363,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1368112283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1368112276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e8e7707e90d38145ae663989bc872d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  arCamera: {fileID: 1368112281}
-  pinPrefab: {fileID: 2919387385965468922, guid: 645a2d616953b0c4b98159c98e97484e, type: 3}
-  mapTarget: {fileID: 1879740330}
-  parent: {fileID: 265544851899372199}
 --- !u!1 &1529141338
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,13 +1918,32 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2010793435435179958, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 7296032605929155625}
   m_SourcePrefab: {fileID: 100100000, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
 --- !u!4 &7296032605929155621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5888259697749315296, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
   m_PrefabInstance: {fileID: 2825086831250246578}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7296032605929155625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265544851899372199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8e7707e90d38145ae663989bc872d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  arCamera: {fileID: 1368112281}
+  pinPrefab: {fileID: 2919387385965468922, guid: 645a2d616953b0c4b98159c98e97484e, type: 3}
+  mapTarget: {fileID: 1879740330}
+  parent: {fileID: 265544851899372199}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
