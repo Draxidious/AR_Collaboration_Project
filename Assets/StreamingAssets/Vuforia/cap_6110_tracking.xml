@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+    <Tracking>
+        <CylinderTarget name="beans_can" sideLength="0.110000"/>
+        <ImageTarget name="tumbeak_card" size="0.063000 0.087866"/>
+        <ImageTarget name="lampent_card" size="0.063000 0.087866"/>
+        <ImageTarget name="hitmontop_card" size="0.063000 0.087866"/>
+        <ImageTarget name="heracross_card" size="0.063000 0.087866"/>
+        <ImageTarget name="doublade_card" size="0.063000 0.087866"/>
+        <ImageTarget name="chansey_card" size="0.063000 0.087866"/>
+        <ImageTarget name="kecleon_card" size="0.063000 0.088127"/>
+        <ImageTarget name="electabuzz_card" size="0.063000 0.087321"/>
+        <ImageTarget name="book_cover" size="0.127000 0.203092"/>
+        <ImageTarget name="switchgiftcard" size="0.085000 0.122683"/>
+        <ImageTarget name="switch2box.Front" size="0.217000 0.217000"/>
+        <ImageTarget name="switch2box.Left" size="0.105000 0.217000"/>
+        <ImageTarget name="switch2box.Top" size="0.217000 0.105000"/>
+        <ImageTarget name="switch2box.Right" size="0.105000 0.217000"/>
+        <ImageTarget name="switch2box.Back" size="0.217000 0.217000"/>
+        <ImageTarget name="switch2box.Bottom" size="0.217000 0.105028"/>
+        <MultiTarget name="switch2box">
+            <Part name="switch2box.Left" translation="-0.10849999636411667 0 0" rotation="AD: 0 1 0 -90"/>
+            <Part name="switch2box.Right" translation="0.10849999636411667 0 0" rotation="AD: 0 1 0 90"/>
+            <Part name="switch2box.Front" translation="0 0 0.05249999836087227" rotation="AD: 1 0 0 0"/>
+            <Part name="switch2box.Back" translation="0 0 -0.05249999836087227" rotation="AD: 0 1 0 180"/>
+            <Part name="switch2box.Top" translation="0 0.10849999636411667 0" rotation="AD: 1 0 0 -90"/>
+            <Part name="switch2box.Bottom" translation="0 -0.10849999636411667 0" rotation="AD: 1 0 0 90"/>
+        </MultiTarget>
+    </Tracking>
+</QCARConfig>
