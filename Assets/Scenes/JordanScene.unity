@@ -1486,7 +1486,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 1
+  OwnershipTransfer: 2
   observableSearch: 2
   ObservedComponents:
   - {fileID: 1529141344}
@@ -1914,6 +1914,10 @@ PrefabInstance:
     - target: {fileID: 7204510748863758543, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
       propertyPath: sceneViewId
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204510748863758543, guid: e3d26a63a17a4b84ca82929335c18e64, type: 3}
+      propertyPath: OwnershipTransfer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
