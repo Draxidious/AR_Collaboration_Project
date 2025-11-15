@@ -19,11 +19,10 @@ public class MapPinPlacer : MonoBehaviour
         if (arCamera == null)
             arCamera = Camera.main;
 
-        photonView = GetComponent<PhotonView>();  // PhotonView is on ARCamera
+        photonView = GetComponent<PhotonView>(); // PhotonView must be on the same GameObject
         if (photonView == null)
         {
-            Debug.LogWarning("[MapPinPlacer] No PhotonView on ARCamera. " +
-                             "Pins will still work locally but won't sync.");
+            Debug.LogWarning("[MapPinPlacer] No PhotonView found. Pins will not sync.");
         }
     }
 
@@ -38,7 +37,6 @@ public class MapPinPlacer : MonoBehaviour
         if (Pointer.current == null)
             return;
 
-        // If the user tapped/clicked this frame:
         if (WasScreenTapped())
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -73,34 +71,37 @@ public class MapPinPlacer : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // No filter here, same as original script
-            Vector3 worldPos = hit.point;
-            Vector3 worldNormal = hit.normal;
+            // STEP 1 — Instantiate locally
+            GameObject pin = Instantiate(pinPrefab, hit.point, Quaternion.identity);
+            pin.transform.SetParent(parent.transform, true);
+            pin.transform.up = hit.normal;
 
-            // If we're in a Photon room, sync to everyone; otherwise just spawn locally
-            if (photonView != null && PhotonNetwork.InRoom)
+            // STEP 2 — Capture its LOCAL transform relative to parent
+            Vector3 localPos = pin.transform.localPosition;
+            Quaternion localRot = pin.transform.localRotation;
+            Vector3 localScale = pin.transform.localScale; // important fix!
+
+            // STEP 3 — Send transform to other clients
+            if (PhotonNetwork.InRoom)
             {
-                photonView.RPC(nameof(RPC_SpawnPin), RpcTarget.AllBuffered, worldPos, worldNormal);
-            }
-            else
-            {
-                RPC_SpawnPin(worldPos, worldNormal);
+                photonView.RPC(nameof(RPC_SpawnPinWithLocalTransform),
+                               RpcTarget.OthersBuffered,
+                               localPos, localRot, localScale);
             }
         }
     }
 
     [PunRPC]
-    void RPC_SpawnPin(Vector3 worldPos, Vector3 worldNormal)
+    void RPC_SpawnPinWithLocalTransform(Vector3 localPos, Quaternion localRot, Vector3 localScale)
     {
         if (pinPrefab == null || parent == null)
             return;
 
-        GameObject pin = Instantiate(pinPrefab, worldPos, Quaternion.identity);
+        GameObject pin = Instantiate(pinPrefab);
+        pin.transform.SetParent(parent.transform, false);
 
-        // Parent to map so pin stays attached to the moving tracked target
-        pin.transform.SetParent(parent.transform, true);
-
-        // Optional: make pin stand upright according to surface
-        pin.transform.up = worldNormal;
+        pin.transform.localPosition = localPos;
+        pin.transform.localRotation = localRot;
+        pin.transform.localScale = localScale; // APPLY SCALE FIX
     }
 }

@@ -80,7 +80,6 @@ public class RotateTarget : MonoBehaviour
             {
                 if (hit.transform == transform)
                 {
-                    // 👇 NEW: grab ownership when this user starts rotating
                     if (photonView != null)
                         photonView.RequestOwnership();
 

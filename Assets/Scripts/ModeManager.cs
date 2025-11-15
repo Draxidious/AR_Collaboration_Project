@@ -5,7 +5,6 @@ public class ModeManager : MonoBehaviour
     public MapPinPlacer mapPinPlacer;
     public RotateTarget rotateTarget;
     public MoveMap moveMap; // NEW
-
     public void EnableRotate()
     {
         rotateTarget.enabled = true;
