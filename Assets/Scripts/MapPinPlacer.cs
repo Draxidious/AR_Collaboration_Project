@@ -10,7 +10,7 @@ public class MapPinPlacer : MonoBehaviour
     public Camera arCamera;
     public GameObject pinPrefab;
     public ImageTargetBehaviour mapTarget;
-    public GameObject parent;   // map root (so pins follow the map)
+    public GameObject parent;   // map root so pins move with map
 
     private PhotonView photonView;
 
@@ -19,7 +19,10 @@ public class MapPinPlacer : MonoBehaviour
         if (arCamera == null)
             arCamera = Camera.main;
 
-        photonView = GetComponent<PhotonView>();  // PhotonView is on ARCamera
+        if (parent == null)
+            Debug.LogError("[MapPinPlacer] Parent (map root) is not assigned.");
+
+        photonView = GetComponent<PhotonView>();  // PhotonView on ARCamera
         if (photonView == null)
         {
             Debug.LogWarning("[MapPinPlacer] No PhotonView on ARCamera. " +
@@ -66,41 +69,48 @@ public class MapPinPlacer : MonoBehaviour
 
     void RaycastFromScreen(Vector2 screenPos)
     {
-        if (arCamera == null)
+        if (arCamera == null || parent == null)
             return;
 
         Ray ray = arCamera.ScreenPointToRay(screenPos);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // No filter here, same as original script
+
             Vector3 worldPos = hit.point;
             Vector3 worldNormal = hit.normal;
 
-            // If we're in a Photon room, sync to everyone; otherwise just spawn locally
+            // Convert to map-local coordinates before sending
+            Vector3 localPos = parent.transform.InverseTransformPoint(worldPos);
+            Vector3 localNormal = parent.transform.InverseTransformDirection(worldNormal);
+
             if (photonView != null && PhotonNetwork.InRoom)
             {
-                photonView.RPC(nameof(RPC_SpawnPin), RpcTarget.AllBuffered, worldPos, worldNormal);
+                // Send LOCAL coords over network
+                photonView.RPC(nameof(RPC_SpawnPin), RpcTarget.AllBuffered, localPos, localNormal);
             }
             else
             {
-                RPC_SpawnPin(worldPos, worldNormal);
+                // Single-player / offline  still works
+                RPC_SpawnPin(localPos, localNormal);
             }
         }
     }
 
     [PunRPC]
-    void RPC_SpawnPin(Vector3 worldPos, Vector3 worldNormal)
+    void RPC_SpawnPin(Vector3 localPos, Vector3 localNormal)
     {
         if (pinPrefab == null || parent == null)
             return;
 
-        GameObject pin = Instantiate(pinPrefab, worldPos, Quaternion.identity);
+        // Instantiate as child of the map parent
+        GameObject pin = Instantiate(pinPrefab, parent.transform);
 
-        // Parent to map so pin stays attached to the moving tracked target
-        pin.transform.SetParent(parent.transform, true);
+        // Use localPosition so it matches map-local space
+        pin.transform.localPosition = localPos;
 
-        // Optional: make pin stand upright according to surface
+        // Reconstruct world-space orientation from local normal
+        Vector3 worldNormal = parent.transform.TransformDirection(localNormal);
         pin.transform.up = worldNormal;
     }
 }
